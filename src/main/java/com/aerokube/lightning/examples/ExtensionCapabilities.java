@@ -16,12 +16,13 @@ public class ExtensionCapabilities {
                 .chrome().args("headless") // Use similar methods for opera(), edge(), safari() and so on
                 .mobileEmulation().deviceName("Nexus 4")
                 .extension(Selenoid.class).enableVNC().name("MyCoolTest");
-        WebDriver driver = WebDriver.create(baseUri, capabilities);
+        try (WebDriver driver = WebDriver.create(baseUri, capabilities)){
+            String pageSource = driver
+                    .navigation().navigate("https://example.com")
+                    .document().getPageSource();
+            System.out.println(pageSource);
+        }
 
-        String pageSource = driver
-                .navigation().navigate("https://example.com")
-                .document().getPageSource();
-        System.out.println(pageSource);
     }
 
 }

@@ -20,19 +20,20 @@ public class FindElements {
         Capabilities capabilities = Capabilities.create()
                 .firefox().preference("intl.accept_languages", "en,ru");
 
-        WebDriver driver = WebDriver.create(baseUri, capabilities)
-                .timeouts().setPageLoadTimeout(Duration.ofMinutes(2));
+        try (WebDriver driver = WebDriver.create(baseUri, capabilities)
+                .timeouts().setPageLoadTimeout(Duration.ofMinutes(2))) {
+            WebElement fileInput = driver
+                    .navigation().navigate("https://example.com")
+                    .elements().findFirst(By.cssSelector("input[type=file]"));
 
-        WebElement fileInput = driver
-                .navigation().navigate("https://example.com")
-                .elements().findFirst(By.cssSelector("input[type=file]"));
+            Path fileToUpload = Files.createTempFile("lightning-example", "");
+            Files.writeString(fileToUpload, "test-value");
+            String fileRemotePath = driver.document().uploadFile(fileToUpload);
 
-        Path fileToUpload = Files.createTempFile("lightning-example", "");
-        Files.writeString(fileToUpload, "test-value");
-        String fileRemotePath = driver.document().uploadFile(fileToUpload);
+            //Uploading the file and setting file input field value are two separate method calls
+            fileInput.sendKeys(fileRemotePath);
+        }
 
-        //Uploading the file and setting file input field value are two separate method calls
-        fileInput.sendKeys(fileRemotePath);
     }
 
 }

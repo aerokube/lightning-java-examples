@@ -13,20 +13,21 @@ public class Windows {
         String baseUri = "http://localhost:4444/wd/hub";
 
         Capabilities capabilities = Capabilities.create().chrome();
-        WebDriver driver = WebDriver.create(baseUri, capabilities);
+        try (WebDriver driver = WebDriver.create(baseUri, capabilities)) {
+            Window currentWindow = driver
+                    .navigation().navigate("https://example.com")
+                    .windows().current()
+                    .setSize(800, 600)
+                    .setPosition(200, 100);
 
-        Window currentWindow = driver
-                .navigation().navigate("https://example.com")
-                .windows().current()
-                .setSize(800, 600)
-                .setPosition(200, 100);
+            Window newWindow = driver
+                    .windows().createWindow().maximize().switchTo();
+            driver.navigation().navigate("https://aerokube.com/");
+            newWindow.close();
 
-        Window newWindow = driver
-                .windows().createWindow().maximize().switchTo();
-        driver.navigation().navigate("https://aerokube.com/");
-        newWindow.close();
+            currentWindow.switchTo();
+        }
 
-        currentWindow.switchTo();
     }
 
 }

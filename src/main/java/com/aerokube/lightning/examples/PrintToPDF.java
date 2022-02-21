@@ -15,16 +15,17 @@ public class PrintToPDF {
         String baseUri = "http://localhost:4444/wd/hub";
 
         Capabilities capabilities = Capabilities.create().firefox();
-        WebDriver driver = WebDriver.create(baseUri, capabilities);
+        try (WebDriver driver = WebDriver.create(baseUri, capabilities)){
+            byte[] pdfBytes = driver
+                    .navigation().navigate("https://example.com")
+                    .print().landscape()
+                    .addPages(1, 2)
+                    .addPages("3-5")
+                    .scale(0.5f)
+                    .pdf();
+            Files.write(Paths.get("printed.pdf"), pdfBytes);
+        }
 
-        byte[] pdfBytes = driver
-                .navigation().navigate("https://example.com")
-                .print().landscape()
-                .addPages(1, 2)
-                .addPages("3-5")
-                .scale(0.5f)
-                .pdf();
-        Files.write(Paths.get("printed.pdf"), pdfBytes);
     }
 
 }

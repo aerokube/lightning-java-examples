@@ -21,8 +21,9 @@ public class HttpClientOverride {
                 .connectTimeout(Duration.ofSeconds(60))
                 .followRedirects(HttpClient.Redirect.NEVER);
 
-        WebDriver driver = WebDriver.create(baseUri, capabilities, httpClientBuilder);
-        driver.navigation().navigate("https://example.com");
+        try (WebDriver driver = WebDriver.create(baseUri, capabilities, httpClientBuilder)) {
+            driver.navigation().navigate("https://example.com");
+        }
     }
 
 }

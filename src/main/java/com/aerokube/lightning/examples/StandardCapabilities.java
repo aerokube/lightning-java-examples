@@ -18,12 +18,13 @@ public class StandardCapabilities {
                 .browserName("chrome")
                 .browserVersion("94.0")
                 .acceptInsecureCerts();
-        WebDriver driver = WebDriver.create(baseUri, capabilities);
+        try (WebDriver driver = WebDriver.create(baseUri, capabilities)){
+            byte[] screenshotBytes = driver
+                    .navigation().navigate("https://example.com")
+                    .screenshot().take();
+            Files.write(Paths.get("screenshot.png"), screenshotBytes);
+        }
 
-        byte[] screenshotBytes = driver
-                .navigation().navigate("https://example.com")
-                .screenshot().take();
-        Files.write(Paths.get("screenshot.png"), screenshotBytes);
     }
 
 }

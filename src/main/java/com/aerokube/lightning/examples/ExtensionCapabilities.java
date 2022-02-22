@@ -2,7 +2,7 @@ package com.aerokube.lightning.examples;
 
 import com.aerokube.lightning.Capabilities;
 import com.aerokube.lightning.WebDriver;
-import com.aerokube.lightning.extensions.Selenoid;
+import com.aerokube.lightning.extensions.SelenoidCapabilities;
 
 /**
  * This example demonstrates how to use specific capabilities
@@ -15,7 +15,7 @@ public class ExtensionCapabilities {
         Capabilities capabilities = Capabilities.create()
                 .chrome().args("headless") // Use similar methods for opera(), edge(), safari() and so on
                 .mobileEmulation().deviceName("Nexus 4")
-                .extension(Selenoid.class).enableVNC().name("MyCoolTest");
+                .extension(SelenoidCapabilities.class).enableVNC().name("MyCoolTest");
         try (WebDriver driver = WebDriver.create(baseUri, capabilities)){
             String pageSource = driver
                     .navigation().navigate("https://example.com")
